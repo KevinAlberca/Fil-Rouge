@@ -19,8 +19,8 @@ class SquareController extends Controller
 
     public function squareNumberAction($number)
     {
-        $square = $number * $number;
-        return new Response("<span style='color:red; font-weight:700;'>".$square."</span>");
+        $calculator = $this->get("calculator");
+        return new Response($calculator->square($number));
     }
 
 }
