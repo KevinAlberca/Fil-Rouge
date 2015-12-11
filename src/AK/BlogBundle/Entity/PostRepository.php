@@ -21,7 +21,9 @@ class PostRepository extends EntityRepository
             ->add("from", "Post p")
             ->add("where", "p.is_published = :published")
             ->add("orderBy", "p.created_at DESC")
-            ->setParameter("published", "true");
+            ->setParameter("published", true)
+            ->getQuery()
+            ->getResult();
     }
 
 }

@@ -39,7 +39,7 @@ class Post
      * @var string $slug
      *
      * @Gedmo\Slug(fields={"title"}, updatable=false, separator="-")
-     * @ORM\Column(name="slug", type="string", length=255)
+     * @ORM\Column(name="slug", type="string", length=255, unique=true)
      */
     private $slug;
 
