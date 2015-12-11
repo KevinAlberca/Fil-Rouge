@@ -10,4 +10,5 @@ app:
 
 square_number:
   path: /square/{number}
-  defaults: { _controller: AppBundle:Square:squareNumber }
+  defaults:
+      _controller: AppBundle:Square:squareNumber
