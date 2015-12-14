@@ -17,7 +17,6 @@ class LoadPostFixtures implements FixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        // TODO: Implement load() method.
         for($i=0; $i<100;$i++){
             $post = new Post();
             $post->setTitle(sprintf("Titre du post n: %d", $i))
