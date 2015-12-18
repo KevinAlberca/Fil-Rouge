@@ -1,0 +1,18 @@
+{# /src/Bundle/Resources/views/{{ name }}.html.twig #}
+{% extends "::base.html.twig" %}
+
+{% block body %}
+
+    <table>
+        <tr>
+            <th>Titre</th>
+            <th>Contenu</th>
+        </tr>
+    {% for post in posts %}
+        <tr style="{{ loop.index is odd ? 'background-color: red': 'background-color: lightgreen' }}">
+            <td>{{ post.title }}</td>
+            <td>{{ post.body }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}git
