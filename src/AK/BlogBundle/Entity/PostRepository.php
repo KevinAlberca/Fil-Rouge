@@ -10,6 +10,7 @@ namespace AK\BlogBundle\Entity;
 
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
 class PostRepository extends EntityRepository
 {
@@ -37,12 +38,12 @@ class PostRepository extends EntityRepository
             ->orWhere("p.body LIKE :search")
                 ->setParameter("search", "%".$search."%");
 
-            if($published === true){
+        if($published === true){
             $req->andWhere("p.isPublished = :published")
                 ->setParameter("published", $published);
-            }
+        }
 
-        return $req->getQuery()->getResult();
+        return $req->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
 }

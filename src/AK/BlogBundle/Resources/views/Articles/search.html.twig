@@ -1,27 +1,38 @@
-<body>
+{% extends "::base.html.twig" %}
+
+{% block body %}
 
     {{ form(form) }}
 
     {% if posts != null %}
         <table border>
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Body</th>
-                    <th>Slug</th>
-                    <th>isPublished</th>
-                </tr>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Body</th>
+                <th>Slug</th>
+                <th>isPublished</th>
+            </tr>
             </thead>
-            {% for post in posts %}
+            {% for post in posts.currentPageResults %}
                 <tr>
                     <td>{{ post.id }}</td>
                     <td>{{ post.title }}</td>
                     <td>{{ post.body }}</td>
                     <td>{{ post.slug }}</td>
-                    <td>{{ post.isPublished ? 1 : 0 }}</td>
+                    <td>{{ post.isPublished ? "Published" : "Not published" }}</td>
                 </tr>
             {% endfor %}
         </table>
+
+        {{ dump(posts) }}
+
+        {{ pagerfanta(posts, 'twitter_bootstrap', {'routeName': 'blog_search'}) }}
+
     {% endif %}
-</body>
+
+
+
+
+{% endblock %}

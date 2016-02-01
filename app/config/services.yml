@@ -12,3 +12,15 @@ services:
 services:
     calculator:
         class: AppBundle\Calculator
+
+    invoice_generator:
+        class: AppBundle\InvoiceGenerator
+        arguments:
+            - @calculator
+
+    pagerfanta.view.default:
+        class: Pagerfanta\View\DefaultView
+        public: false
+        tags: [{ name: pagerfanta.view, alias: default }]
+        arguments:
+            - { proximity: 2, previous_message: Anterior, next_message: Siguiente }

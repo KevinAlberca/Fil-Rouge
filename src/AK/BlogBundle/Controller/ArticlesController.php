@@ -9,21 +9,23 @@
 namespace AK\BlogBundle\Controller;
 
 use AK\BlogBundle\Entity\Post;
-use AK\BlogBundle\Entity\PostRepository;
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\Extension\Core\Type\RadioType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\View\DefaultView;
+use Pagerfanta\Exception\NotValidCurrentPageException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 
 class ArticlesController extends Controller
 {
     /**
-     * @Route("/create")
+     * @Route("/propose")
      * @Template("AKBlogBundle:Articles:create.html.twig")
      */
     public function createAction(Request $request)
@@ -50,7 +52,7 @@ class ArticlesController extends Controller
     }
 
     /**
-     * @Route("/list")
+     * @Route("/", name="homepage_list")
      * @Template("AKBlogBundle:Articles:list.html.twig")
      */
     public function listAction()
@@ -61,13 +63,14 @@ class ArticlesController extends Controller
         return [
             "posts" => $posts
         ];
+
     }
 
     /**
-    * @Route("/search")
+    * @Route("/search/{id}", defaults={"id" = 1}, name="blog_search")
     * @Template("AKBlogBundle:Articles:search.html.twig")
     **/
-    public function searchAction(Request $request)
+    public function searchAction(Request $request, $id)
     {
         $form = $this->createFormBuilder()
             ->add("search", "text")
@@ -86,9 +89,18 @@ class ArticlesController extends Controller
             $em = $this->getDoctrine()->getManager();
             $posts = $em->getRepository("AKBlogBundle:Post")->search($title, $is_published);
 
+            $adapter = new ArrayAdapter($posts);
+
+            $pager = new Pagerfanta($adapter, false);
+            $pager->setCurrentPage($id);
+
+            $pager->hasPreviousPage() ? $pager->getPreviousPage(): null;
+            $pager->hasNextPage() ? $pager->getNextPage() : null;
+
             return [
-                "posts" => $posts,
-                "form" => $form->createView()
+                "posts" => $pager,
+                "form" => $form->createView(),
+                "search" => $title,
             ];
         }
 
