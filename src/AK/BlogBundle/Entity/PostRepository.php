@@ -18,12 +18,31 @@ class PostRepository extends EntityRepository
     {
         return $this->getEntityManager()->createQueryBuilder()
             ->add("select", "*")
-            ->add("from", "post ")
+            ->add("from", "post")
 //            ->add("where", "p.is_published = :published")
 //            ->add("orderBy", "p.created_at DESC")
 //            ->setParameter("published", true)
             ->getQuery()
             ->getResult();
+    }
+
+    public function search($search, $published)
+    {
+
+        $req = $this->getEntityManager()->createQueryBuilder()
+            ->select("p")
+            ->from("AKBlogBundle:Post", "p")
+            ->where("p.title LIKE :search")
+                ->setParameter("search", "%".$search."%")
+            ->orWhere("p.body LIKE :search")
+                ->setParameter("search", "%".$search."%");
+
+            if($published === true){
+            $req->andWhere("p.isPublished = :published")
+                ->setParameter("published", $published);
+            }
+
+        return $req->getQuery()->getResult();
     }
 
 }
